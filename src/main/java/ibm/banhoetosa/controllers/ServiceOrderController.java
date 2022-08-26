@@ -54,4 +54,7 @@ public class ServiceOrderController {
     return ResponseEntity.ok().body(soExists.get());
 
   }
+
+  //TODO Método de update
+  //NÃO DEU TEMPO 😿
 }

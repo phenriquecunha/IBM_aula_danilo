@@ -1,5 +1,6 @@
 package ibm.banhoetosa.controllers;
 
+import ibm.banhoetosa.dtos.AnimalDto;
 import ibm.banhoetosa.dtos.CustomerDto;
 import ibm.banhoetosa.models.CustomerModel;
 import ibm.banhoetosa.repositories.CustomerRepository;
@@ -16,7 +17,7 @@ public class CustomerController {
   CustomerRepository customerRepository;
 
   @PostMapping("/create")
-  public ResponseEntity<Object> create(@RequestBody CustomerDto customer){
+  public ResponseEntity<Object> createCustomer(@RequestBody CustomerDto customer){
     var customerModel = new CustomerModel();
     BeanUtils.copyProperties(customer, customerModel);
     var customerCreated = customerRepository.save(customerModel);
@@ -35,6 +36,29 @@ public class CustomerController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
     }
     return ResponseEntity.ok().body(customerExists.get());
+  }
+
+  @PutMapping("/update/{id}")
+  public ResponseEntity<Object> updateCustomer(@PathVariable int id, @RequestBody CustomerDto customer) {
+    var customerExists = customerRepository.findById(id);
+    if (customerExists.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado!");
+    }
+    var customerModel = customerExists.get();
+    customerModel.setName(customer.getName());
+    customerModel.setTel(customer.getTel());
+
+    return ResponseEntity.ok().body(customerRepository.save(customerExists.get()));
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<Object> deleteCustomer(@PathVariable int id){
+    var customerExists = customerRepository.findById(id);
+    if(customerExists.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado!");
+    }
+    customerRepository.deleteById(id);
+    return ResponseEntity.ok().body("Animal excluído com sucesso!");
   }
 
 }

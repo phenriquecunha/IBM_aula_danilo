@@ -17,7 +17,7 @@ public class AnimalController {
   AnimalRepository animalRepository;
 
   @PostMapping("/create")
-  public ResponseEntity<Object> create(@RequestBody AnimalDto animal){
+  public ResponseEntity<Object> createAnimal(@RequestBody AnimalDto animal){
     var animalModel = new AnimalModel();
     BeanUtils.copyProperties(animal, animalModel);
     var animalCreated = animalRepository.save(animalModel);
@@ -36,5 +36,32 @@ public class AnimalController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Animal não encontrado!");
     }
     return ResponseEntity.ok().body(animalExists.get());
+  }
+
+  @PutMapping("/update/{id}")
+  public ResponseEntity<Object> updateAnimal(@PathVariable int id, @RequestBody AnimalDto animal){
+    var animalExists = animalRepository.findById(id);
+    if(animalExists.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Animal não encontrado!");
+    }
+
+    var animalModel = animalExists.get();
+
+    animalModel.setAge(animal.getAge());
+    animalModel.setName(animal.getName());
+    animalModel.setWeight(animal.getWeight());
+    animalModel.setId_customer(animal.getId_customer());
+
+    return ResponseEntity.ok().body(animalRepository.save(animalExists.get()));
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<Object> deleteAnimal(@PathVariable int id){
+    var animalExists = animalRepository.findById(id);
+    if(animalExists.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Animal não encontrado!");
+    }
+    animalRepository.deleteById(id);
+    return ResponseEntity.ok().body("Animal excluído com sucesso!");
   }
 }

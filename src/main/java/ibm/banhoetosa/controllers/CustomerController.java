@@ -27,4 +27,14 @@ public class CustomerController {
   public ResponseEntity<Object> listAll(){
     return ResponseEntity.ok().body(customerRepository.findAll());
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> getCustomer(@PathVariable int id){
+    var customerExists = customerRepository.findById();
+    if(customerExists.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+    }
+    return ResponseEntity.ok().body(customerExists.get());
+  }
+
 }

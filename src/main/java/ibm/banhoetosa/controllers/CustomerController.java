@@ -30,7 +30,7 @@ public class CustomerController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Object> getCustomer(@PathVariable int id){
-    var customerExists = customerRepository.findById();
+    var customerExists = customerRepository.findById(id);
     if(customerExists.isEmpty()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
     }

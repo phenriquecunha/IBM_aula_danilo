@@ -7,10 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer")
@@ -26,7 +23,8 @@ public class CustomerController {
     return ResponseEntity.status(HttpStatus.CREATED).body(customerCreated);
   }
 
-  public ResponseEntity<Object> listAll(@RequestBody CustomerDto customer){
+  @GetMapping("/list")
+  public ResponseEntity<Object> listAll(){
     return ResponseEntity.ok().body(customerRepository.findAll());
   }
 }
